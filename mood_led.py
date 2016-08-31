@@ -10,6 +10,10 @@ led = [17, 27, 22, 23]
 
 
 led_step = 0.0005
+# led dimming, like soft PMW
+# '0.023' means 23ms per one pulse
+# it is about 43hz.
+# 1 / 0.023 = 43.4782...
 led_frequency = 0.023
 led_loop_step = 45 # led_frequency / led_step - 1
 
@@ -295,7 +299,7 @@ def SetLedOff():
 
 
 if __name__ == '__main__':
-    
+
     GPIO.setmode(GPIO.BCM)
     for k in led:
         GPIO.setup(k, GPIO.OUT)
