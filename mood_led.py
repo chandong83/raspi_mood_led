@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 import threading
- 
+import random
 
 #LED Port Setting
 led = [17, 27, 22, 23]
@@ -10,10 +10,6 @@ led = [17, 27, 22, 23]
 
 
 led_step = 0.0005
-# led dimming, like soft PMW
-# '0.023' means 23ms per one pulse
-# it is about 43hz.
-# 1 / 0.023 = 43.4782...
 led_frequency = 0.023
 led_loop_step = 45 # led_frequency / led_step - 1
 
@@ -295,7 +291,38 @@ def SetLedOff():
 
 
 
+#
+# System Shutdown LED Effect
+#
+def SetForce_Shutdown():
+    for n in xrange(3):
+        SetLedOn()
+        time.sleep(0.08)
+        SetLedOff()
+        time.sleep(0.08)
 
+    time.sleep(0.3)
+    SetLedOn()
+
+    time.sleep(0.5)
+    SetLedSmoothOff()
+
+
+#
+# System BootUp LED Effect
+#
+def SetForce_BootUp():
+    for n in xrange(3):
+        SetLedOn()
+        time.sleep(0.08)
+        SetLedOff()
+        time.sleep(0.08)
+
+    time.sleep(0.3)
+    SetLedOff()
+
+    time.sleep(0.5)
+    SetLedSmoothOn()
 
 
 if __name__ == '__main__':
@@ -309,4 +336,5 @@ if __name__ == '__main__':
     #SetLedOn()
     #SetLedOn()
     #time.sleep(1)
-    SetLedRightTurn()
+    #SetLedRightTurn()
+    SetForce_BootUp()
