@@ -5,7 +5,7 @@ import threading
 import random
 
 #LED Port Setting
-led = [17, 27, 22, 23]
+led = []
 #led = [17, 27, 22, 23, 24, 25, 5, 6, 13, 19]
 
 
@@ -19,6 +19,16 @@ led_mode_on_off = 0
 led_mode_off = 1
 led_mode_on = 2
 
+led_motion_speed = 0.15
+
+def Init_Led_Port(led_port):
+    global led
+    led  = led_port
+    GPIO.setmode(GPIO.BCM)
+
+    for k in led: 
+        GPIO.setup(k, GPIO.OUT)
+        GPIO.output(k, False)
 
 
 class led_thread(threading.Thread):
@@ -87,16 +97,15 @@ class led_thread(threading.Thread):
         self.__isRunning = False
 
 
-
-Threads = []
-Threads_reverse = []
-
-
 #
 # Smoothly Turn on left to right LED
 # and then Smoothly Turn off right to left it
 #
 def SetLedLeftTurn():
+    Threads = []
+    Threads_reverse = []
+
+    SetLedOff()
 
     for i in led:
         th = led_thread(i, led_mode_on_off)
@@ -104,13 +113,13 @@ def SetLedLeftTurn():
 
     for th in Threads:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
 
 
-    led_reverse = led
+    led_reverse = led[:]
     led_reverse.reverse()
 
     for i in led_reverse:
@@ -119,7 +128,7 @@ def SetLedLeftTurn():
 
     for th in Threads_reverse:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads_reverse:
         th.finish()
@@ -131,8 +140,10 @@ def SetLedLeftTurn():
 # and then Smoothly Turn off left to right it
 #
 def SetLedRightTurn():
+    Threads = []
+    Threads_reverse = []
 
-    led_reverse = led
+    led_reverse = led[:]
     led_reverse.reverse()
 
     for i in led_reverse:
@@ -141,7 +152,7 @@ def SetLedRightTurn():
 
     for th in Threads_reverse:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads_reverse:
         th.finish()
@@ -155,7 +166,7 @@ def SetLedRightTurn():
 
     for th in Threads:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
@@ -166,6 +177,7 @@ def SetLedRightTurn():
 # Smoothly Turn on left to right All LED
 #
 def SetLedLeftShiftOn():
+    Threads = []
 
     for i in led:
         th = led_thread(i, led_mode_on)
@@ -173,7 +185,7 @@ def SetLedLeftShiftOn():
 
     for th in Threads:
         th.start()
-        time.sleep(0.3)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
@@ -183,6 +195,7 @@ def SetLedLeftShiftOn():
 # Smoothly Turn off left to right All LED
 #
 def SetLedLeftShiftOff():
+    Threads = []
 
     for i in led:
         th = led_thread(i, led_mode_off)
@@ -190,7 +203,7 @@ def SetLedLeftShiftOff():
 
     for th in Threads:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
@@ -201,17 +214,18 @@ def SetLedLeftShiftOff():
 # Smoothly Turn on right to left All LED
 #
 def SetLedRightShiftOn():
+    Threads = []
 
-    led_reverse = led
+    led_reverse = led[:]
     led_reverse.reverse()
 
-    for i in led:
+    for i in led_reverse:
         th = led_thread(i, led_mode_on)
         Threads.append(th)
 
     for th in Threads:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
@@ -221,17 +235,18 @@ def SetLedRightShiftOn():
 # Smoothly Turn off right to left All LED
 #
 def SetLedRightShiftOff():
+    Threads = []
 
-    led_reverse = led
+    led_reverse = led[:]
     led_reverse.reverse()
 
-    for i in led:
+    for i in led_reverse:
         th = led_thread(i, led_mode_off)
         Threads.append(th)
 
     for th in Threads:
         th.start()
-        time.sleep(0.2)
+        time.sleep(led_motion_speed)
 
     for th in Threads:
         th.join()
@@ -242,6 +257,8 @@ def SetLedRightShiftOff():
 # Smoothly Turn Off  All LED
 #
 def SetLedSmoothOff():
+    Threads = []
+
     for i in led:
         th = led_thread(i, led_mode_off)
         Threads.append(th)
@@ -258,6 +275,8 @@ def SetLedSmoothOff():
 # Smoothly Turn On  All LED
 #
 def SetLedSmoothOn():
+    Threads = []
+
     for i in led:
         th = led_thread(i, led_mode_on)
         Threads.append(th)
@@ -294,12 +313,12 @@ def SetLedOff():
 #
 # System Shutdown LED Effect
 #
-def SetForce_Shutdown():
+def SetForced_Shutdown():
     for n in xrange(3):
         SetLedOn()
-        time.sleep(0.08)
+        time.sleep(0.05)
         SetLedOff()
-        time.sleep(0.08)
+        time.sleep(0.05)
 
     time.sleep(0.3)
     SetLedOn()
@@ -311,12 +330,12 @@ def SetForce_Shutdown():
 #
 # System BootUp LED Effect
 #
-def SetForce_BootUp():
+def SetForced_BootUp():
     for n in xrange(3):
         SetLedOn()
-        time.sleep(0.08)
+        time.sleep(0.05)
         SetLedOff()
-        time.sleep(0.08)
+        time.sleep(0.05)
 
     time.sleep(0.3)
     SetLedOff()
@@ -324,17 +343,14 @@ def SetForce_BootUp():
     time.sleep(0.5)
     SetLedSmoothOn()
 
-
+#This is for testing.
 if __name__ == '__main__':
 
-    GPIO.setmode(GPIO.BCM)
-    for k in led:
-        GPIO.setup(k, GPIO.OUT)
-        GPIO.output(k, False)
-
+    led_port = [17, 27, 22, 23, 24, 25, 5, 6, 13, 19]
+    Init_Led_Port(led_port)
     #SetLedMoving()
     #SetLedOn()
     #SetLedOn()
     #time.sleep(1)
     #SetLedRightTurn()
-    SetForce_BootUp()
+    #SetForce_BootUp()
