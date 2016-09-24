@@ -1,32 +1,42 @@
 #!/usr/bin/python
 import ledpy
 import sys
+import time
 if __name__ == '__main__':
-    led = [2, 3, 4, 17, 27]
-    ledpy.Init_Led_Port(led)
-
+    led = [17, 27, 22, 10, 9]
+    led_sec = [11, 5, 6, 13, 19]
+#    led = [5]
+#    led_sec = [4]
+    ledpy.Init_Led_Port(True,led, led_sec)
+    time.sleep(1)
     cmd = int(sys.argv[1])
     if cmd == 0:
-        ledpy.SetForced_BootUp()
+        ledpy.SetDualForced_BootUp()
     elif cmd == 1:
-        ledpy.SetForced_Shutdown()
+        ledpy.SetDualForced_Shutdown()
     elif cmd == 2:
-	ledpy.SetLedOff()
+        ledpy.SetDualLedOff()
     elif cmd == 3:
-	ledpy.SetLedOn()
+	    ledpy.SetDualLedOn()
     elif cmd == 4:
-	ledpy.SetLedSmoothOn()
+	    ledpy.SetDualLedSmoothOn()
     elif cmd == 5:
-	ledpy.SetLedSmoothOff()
+	    ledpy.SetDualLedSmoothOff()
     elif cmd == 6:
-	ledpy.SetLedRightShiftOff()
+	    ledpy.SetDualLedRightShiftOff()
     elif cmd == 7:
-	ledpy.SetLedRightShiftOn()
+	    ledpy.SetDualLedRightShiftOn()
     elif cmd == 8:
-	ledpy.SetLedLeftShiftOff()
+	    ledpy.SetDualLedLeftShiftOff()
     elif cmd == 9:
-	ledpy.SetLedLeftShiftOn()
+	    ledpy.SetDualLedLeftShiftOn()
     elif cmd == 10:
-	ledpy.SetLedRightTurn()
+	    ledpy.SetLedRightTurn()
     elif cmd == 11:
-	ledpy.SetLedLeftTurn()
+	    ledpy.SetLedLeftTurn()
+    elif cmd == 12:
+        for k in range(10):
+             ledpy.SetDualLedSmoothOff()
+             time.sleep(0.2)
+             ledpy.SetDualLedSmoothOn()
+             time.sleep(0.2)
